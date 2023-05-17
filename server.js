@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const http = require('http')
 const bugService = require('./services/bug.service')
+const userService = require('./services/user.service')
 const cookieParser = require('cookie-parser')
 // const axios = require('axios')
 
@@ -45,6 +46,56 @@ app.delete('/api/bug/:bugId', (req, res) => {
     
     bugService.remove(bugId).then((msg) => res.send(msg))
         .catch(err => res.status(403).send(err))
+})
+
+// user routes
+
+app.get('/api/user', (req, res) => {
+    userService.query().then(user => {
+        res.send(user)
+    })
+})
+
+app.post('/api/auth/login', (req, res) => {
+    const credentials = req.body
+    userService.checkLogin(credentials)
+        .then(user => {
+            const token = userService.getLoginToken(user)
+            res.cookie('loginToken', token)
+            console.log('login successful')
+            res.send(user)
+        })
+        .catch(err => {
+            console.log('login failed', err)
+            res.status(401).send(`Login failed, ${err}`)
+        })
+})
+
+app.post('/api/auth/signup', (req, res) => {
+    const credentials = req.body
+    const username = credentials.username
+    userService.checkUserName(username).then(() => {
+    userService.save(credentials)
+        .then(user => {
+            const token = userService.getLoginToken(user)
+            res.cookie('loginToken', token)
+            console.log('signup successful')
+            res.send(user)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(401).send(`Signup failed, ${err}`)
+        })
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(401).send(`Signup failed, ${err}`)
+    })
+})
+
+app.post('/api/auth/logout', (req, res) => {
+    res.clearCookie('loginToken')
+    res.send('logged-out!')
 })
 
 app.listen(3030, () => console.log('Server ready at port 3030!'))

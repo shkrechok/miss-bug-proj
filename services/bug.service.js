@@ -62,6 +62,8 @@ function remove(bugId) {
     return _saveBugsToFile()
 }
 
+// why do we need post and put if save does both?
+// here we control which fields are allowed to be updated
 function save(bug) {
     console.log('save bug:', bug)
     if (bug._id) {
@@ -91,7 +93,6 @@ function _makeId(length = 5) {
 function _saveBugsToFile() {
     return new Promise((resolve, reject) => {
 
-        const bugsStr = JSON.stringify(bugs, null, 2)
         fs.writeFile('data/bugs.json', JSON.stringify(bugs, null, 2), (err) => {
             if (err) {
                 console.log('err:', err)

@@ -1,0 +1,22 @@
+[
+  {
+    "_id": "u101",
+    "username": "user1",
+    "fullname": "Kasha Malasha",
+    "password": "secret1",
+    "score": 100
+  },
+  {
+    "_id": "u102",
+    "username": "user2",
+    "fullname": "Chupa Kabra",
+    "password": "secret2",
+    "score": 100
+  },
+  {
+    "username": "user3",
+    "fullname": "Kasha Malasha",
+    "password": "secret1",
+    "_id": "kRG0r"
+  }
+]
